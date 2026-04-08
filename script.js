@@ -1,65 +1,68 @@
-// PRELOADED DATA
+// CONFIGURATION
 const PRESETS = [
-    { name: "YouTube", url: "https://youtube.com", icon: "📺", color: "#ff0000" },
-    { name: "GitHub", url: "https://github.com", icon: "🐙", color: "#6e5494" },
-    { name: "Netflix", url: "https://netflix.com", icon: "🎬", color: "#e50914" },
-    { name: "ChatGPT", url: "https://chatgpt.com", icon: "🤖", color: "#10a37f" },
+    { name: "YouTube", url: "https://youtube.com", icon: "🎬", color: "#ff0000" },
     { name: "Twitch", url: "https://twitch.tv", icon: "🟣", color: "#9146ff" },
-    { name: "Reddit", url: "https://reddit.com", icon: "🧡", color: "#ff4500" }
+    { name: "Discord", url: "https://discord.com", icon: "💬", color: "#5865f2" },
+    { name: "Reddit", url: "https://reddit.com", icon: "🟠", color: "#ff4500" },
+    { name: "GitHub", url: "https://github.com", icon: "🐙", color: "#6e5494" },
+    { name: "ChatGPT", url: "https://chatgpt.com", icon: "✨", color: "#10a37f" }
 ];
+
+const QUICK_EMOJIS = ["🚀", "🎮", "📺", "🎧", "🔥", "🛠️", "📸", "🍔", "💡", "💰", "🌐", "⚡"];
 
 let state = {
     theme: localStorage.getItem('theme') || 'dark',
-    settings: JSON.parse(localStorage.getItem('settings')) || { title: 'MKWEB', accent: '#6366f1' }
+    settings: JSON.parse(localStorage.getItem('settings')) || { title: 'MKWEB', accent: '#6366f1' },
+    selectedEmoji: "🌐"
 };
 
+// INIT
 window.onload = () => {
     initPicks();
     renderPresets();
+    renderEmojiPicker();
     applyState();
     updateTime();
     setInterval(updateTime, 1000);
-
-    // Search on Enter
-    document.getElementById('search').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') search();
-    });
+    
+    document.getElementById('search').addEventListener('keypress', (e) => e.key === 'Enter' && search());
 };
 
-// INITIALIZE PICKS (Preload)
 function initPicks() {
-    let picks = JSON.parse(localStorage.getItem("picks"));
-    if (!picks || picks.length === 0) {
-        localStorage.setItem("picks", JSON.stringify(PRESETS.slice(0, 4)));
-    }
+    let picks = JSON.parse(localStorage.getItem("picks")) || PRESETS;
+    if (!localStorage.getItem("picks")) localStorage.setItem("picks", JSON.stringify(picks));
     displayPicks();
 }
 
-// LIVE UPDATE SETTINGS
-function liveUpdateSettings() {
-    const title = document.getElementById("customTitle").value || "MKWEB";
-    const accent = document.getElementById("accentColor").value;
-    
-    document.getElementById("title").textContent = title;
-    document.documentElement.style.setProperty('--accent', accent);
-    
-    state.settings = { title, accent };
-    localStorage.setItem("settings", JSON.stringify(state.settings));
-}
-
-// QUICK PICK LOGIK
-function renderPresets() {
-    const container = document.getElementById("presetContainer");
-    PRESETS.forEach(p => {
-        const btn = document.createElement("button");
-        btn.className = "preset-btn";
-        btn.innerHTML = `${p.icon} ${p.name}`;
-        btn.onclick = () => fastAdd(p);
-        container.appendChild(btn);
+function renderEmojiPicker() {
+    const cont = document.getElementById("emojiPicker");
+    QUICK_EMOJIS.forEach(e => {
+        const span = document.createElement("span");
+        span.className = "emoji-item";
+        span.textContent = e;
+        span.onclick = () => {
+            state.selectedEmoji = e;
+            document.querySelectorAll(".emoji-item").forEach(el => el.style.background = "none");
+            span.style.background = "var(--glass-heavy)";
+            span.style.borderRadius = "8px";
+        };
+        cont.appendChild(span);
     });
 }
 
-function fastAdd(item) {
+function renderPresets() {
+    const cont = document.getElementById("presetContainer");
+    PRESETS.forEach(p => {
+        const b = document.createElement("button");
+        b.className = "preset-btn";
+        b.style.borderLeft = `3px solid ${p.color}`;
+        b.innerHTML = `${p.icon} ${p.name}`;
+        b.onclick = () => savePick(p);
+        cont.appendChild(b);
+    });
+}
+
+function savePick(item) {
     const picks = JSON.parse(localStorage.getItem("picks")) || [];
     picks.push(item);
     localStorage.setItem("picks", JSON.stringify(picks));
@@ -69,28 +72,27 @@ function fastAdd(item) {
 function addQuickPick() {
     const name = document.getElementById("quickName").value;
     let url = document.getElementById("quickURL").value;
-    const icon = document.getElementById("quickIcon").value || "🌐";
-    const color = document.getElementById("quickColor").value;
-
-    if (!name || !url) return;
-    if (!url.startsWith('http')) url = 'https://' + url;
-
-    fastAdd({ name, url, icon, color });
+    if(!name || !url) return;
+    if(!url.startsWith('http')) url = 'https://' + url;
+    
+    savePick({ name, url, icon: state.selectedEmoji, color: document.getElementById("quickColor").value });
     document.getElementById("quickName").value = "";
     document.getElementById("quickURL").value = "";
 }
 
 function displayPicks() {
-    const container = document.getElementById("quickList");
-    container.innerHTML = "";
+    const cont = document.getElementById("quickList");
+    cont.innerHTML = "";
     const picks = JSON.parse(localStorage.getItem("picks")) || [];
 
     picks.forEach((p, i) => {
         const a = document.createElement("a");
-        a.className = "quick-item";
+        a.className = "icon-card";
         a.href = p.url;
-        a.style.borderTop = `2px solid ${p.color}`;
-        a.innerHTML = `<span>${p.icon}</span><small>${p.name}</small>`;
+        // STAGGERED ANIMATION DELAY
+        a.style.animationDelay = `${i * 0.05}s`;
+        a.style.borderBottom = `3px solid ${p.color}`;
+        a.innerHTML = `<div class="emoji">${p.icon}</div><span>${p.name}</span>`;
         
         a.oncontextmenu = (e) => {
             e.preventDefault();
@@ -98,17 +100,23 @@ function displayPicks() {
             localStorage.setItem("picks", JSON.stringify(picks));
             displayPicks();
         };
-        container.appendChild(a);
+        cont.appendChild(a);
     });
 }
 
-// THEME & CORE
+function liveUpdate() {
+    state.settings.title = document.getElementById("customTitle").value || "MKWEB";
+    state.settings.accent = document.getElementById("accentColor").value;
+    localStorage.setItem("settings", JSON.stringify(state.settings));
+    applyState();
+}
+
 function applyState() {
     document.body.className = state.theme;
     document.getElementById("title").textContent = state.settings.title;
+    document.documentElement.style.setProperty('--accent', state.settings.accent);
     document.getElementById("customTitle").value = state.settings.title;
     document.getElementById("accentColor").value = state.settings.accent;
-    document.documentElement.style.setProperty('--accent', state.settings.accent);
 }
 
 function toggleTheme() {
@@ -118,12 +126,8 @@ function toggleTheme() {
 }
 
 function toggleSettings() {
-    const modal = document.getElementById("settingsOverlay");
-    modal.style.display = modal.style.display === "grid" ? "none" : "grid";
-}
-
-function closeSettings(e) {
-    if(e.target.id === "settingsOverlay") toggleSettings();
+    const m = document.getElementById("settingsOverlay");
+    m.style.display = m.style.display === "grid" ? "none" : "grid";
 }
 
 function search() {
@@ -136,3 +140,5 @@ function updateTime() {
     document.getElementById("time").textContent = now.toLocaleTimeString('de-DE', {hour: '2-digit', minute:'2-digit'});
     document.getElementById("date").textContent = now.toLocaleDateString('de-DE', {weekday:'long', day:'2-digit', month:'long'});
 }
+
+function closeSettings(e) { if(e.target.id === "settingsOverlay") toggleSettings(); }
