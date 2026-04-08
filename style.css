@@ -1,0 +1,95 @@
+:root {
+    --bg: #0f172a;
+    --text: #e2e8f0;
+    --glass: rgba(255,255,255,0.1);
+    --accent: #6366f1;
+}
+
+body.light {
+    --bg: #ffffff;
+    --text: #111;
+    --glass: rgba(0,0,0,0.05);
+    --accent: #4f46e5;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    transition: 0.4s;
+}
+
+/* GLASS CONTAINER */
+.container {
+    text-align: center;
+    padding: 40px;
+}
+
+/* TITLE */
+h1 {
+    font-size: 60px;
+    margin-bottom: 10px;
+    animation: fadeIn 1s ease;
+}
+
+/* TIME */
+#time {
+    font-size: 40px;
+}
+
+#date {
+    opacity: 0.7;
+    margin-bottom: 20px;
+}
+
+/* SEARCH */
+.search-box input {
+    padding: 15px;
+    width: 300px;
+    border-radius: 15px;
+    border: none;
+    background: var(--glass);
+    color: var(--text);
+    backdrop-filter: blur(10px);
+}
+
+.search-box button {
+    padding: 15px;
+    border-radius: 15px;
+    border: none;
+    background: var(--accent);
+    color: white;
+}
+
+/* QUICK PICKS */
+.quick-item {
+    display: inline-block;
+    margin: 10px;
+    padding: 15px;
+    border-radius: 15px;
+    background: var(--glass);
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.quick-item:hover {
+    transform: translateY(-5px) scale(1.05);
+}
+
+/* CUSTOM PANEL */
+.custom-panel {
+    margin-top: 40px;
+    padding: 20px;
+    border-radius: 20px;
+    background: var(--glass);
+    backdrop-filter: blur(15px);
+    animation: fadeIn 1.2s ease;
+}
+
+/* ANIMATION */
+@keyframes fadeIn {
+    from {opacity: 0; transform: translateY(20px);}
+    to {opacity: 1; transform: translateY(0);}
+}
