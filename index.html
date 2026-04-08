@@ -3,75 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MKWEB Ultra</title>
+    <title>MKWEB | Ultra Edition</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;800&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="dark">
+    <div class="blob-cont">
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+    </div>
 
-<div class="overlay" id="settingsOverlay" onclick="closeSettings(event)">
-    <div class="settings-modal" onclick="event.stopPropagation()">
-        <div class="modal-header">
-            <h2>Konfiguration</h2>
-            <button class="close-btn" onclick="toggleSettings()">✕</button>
-        </div>
-        
-        <div class="settings-content">
-            <section>
-                <h3>⚡ Schnell-Hinzufügen (Presets)</h3>
-                <div id="presetContainer" class="preset-grid"></div>
-                
-                <h3 style="margin-top:20px">➕ Manuell</h3>
-                <div class="input-group">
-                    <input id="quickName" placeholder="Name">
-                    <input id="quickURL" placeholder="URL">
-                    <div class="row">
-                        <input id="quickIcon" placeholder="Emoji" style="flex:1">
-                        <input id="quickColor" type="color" value="#6366f1" style="width:50px">
+    <div class="overlay" id="settingsOverlay" onclick="closeSettings(event)">
+        <div class="settings-modal" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2>Control Center</h2>
+                <button class="close-btn" onclick="toggleSettings()">✕</button>
+            </div>
+            
+            <div class="settings-content">
+                <section>
+                    <h3>⚡ Quick-Presets</h3>
+                    <div id="presetContainer" class="preset-grid"></div>
+                    
+                    <h3>➕ Eigener Link</h3>
+                    <div class="input-group">
+                        <input id="quickName" placeholder="Name">
+                        <input id="quickURL" placeholder="URL (google.de)">
+                        <div class="emoji-picker" id="emojiPicker">
+                            </div>
+                        <input id="quickColor" type="color" value="#6366f1">
+                        <button onclick="addQuickPick()" class="btn-add">Hinzufügen</button>
                     </div>
-                    <button onclick="addQuickPick()" class="btn-add">Hinzufügen</button>
-                </div>
-            </section>
+                </section>
 
-            <section class="divider-left">
-                <h3>🎨 Design Live</h3>
-                <label>Dashboard Titel</label>
-                <input id="customTitle" placeholder="Titel ändern..." oninput="liveUpdateSettings()">
-                
-                <label>Akzentfarbe</label>
-                <input type="color" id="accentColor" oninput="liveUpdateSettings()">
-                
-                <div class="stats-box">
-                    <p>Rechtsklick auf Icons zum Löschen.</p>
-                </div>
-            </section>
+                <section class="divider-left">
+                    <h3>🎨 Design & Feel</h3>
+                    <label>Dashboard Titel</label>
+                    <input id="customTitle" placeholder="Titel..." oninput="liveUpdate()">
+                    
+                    <label>Akzentfarbe</label>
+                    <input type="color" id="accentColor" oninput="liveUpdate()">
+                    
+                    <div class="info-card">
+                        <p>💡 <b>Tipp:</b> Rechtsklick auf Icons löscht diese sofort.</p>
+                    </div>
+                </section>
+            </div>
         </div>
     </div>
-</div>
 
-<div class="container">
-    <header class="hero">
-        <h1 id="title">MKWEB</h1>
-        <div class="clock-box">
+    <div class="container">
+        <header>
             <div id="time">00:00</div>
+            <h1 id="title">MKWEB</h1>
             <div id="date">Lädt...</div>
+        </header>
+
+        <div class="search-container">
+            <div class="search-bar">
+                <input type="text" id="search" placeholder="Was suchst du?" autocomplete="off">
+                <button onclick="search()"><span>Go</span></button>
+            </div>
         </div>
-    </header>
 
-    <div class="search-wrapper">
-        <input type="text" id="search" placeholder="Enter zum Suchen..." autocomplete="off">
-        <div class="search-hint">Google Suche</div>
+        <main id="quickList" class="icon-grid">
+            </main>
+
+        <nav class="dock">
+            <button onclick="toggleTheme()" class="dock-item" title="Design">🌓</button>
+            <button onclick="toggleSettings()" class="dock-item" title="Settings">⚙️</button>
+        </nav>
     </div>
 
-    <main id="quickList" class="bento-grid">
-        </main>
-
-    <div class="action-bar">
-        <button onclick="toggleTheme()" id="themeBtn" class="glass-btn">🌙</button>
-        <button onclick="toggleSettings()" class="glass-btn">⚙️ Custom</button>
-    </div>
-</div>
-
-<script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
