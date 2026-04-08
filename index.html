@@ -3,61 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MKWEB | Dashboard</title>
+    <title>MKWEB Ultra</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<div class="overlay" id="settingsOverlay">
-    <div class="settings-modal">
-        <button class="close-btn" onclick="toggleSettings()">✕</button>
-        <h2>🎨 Personalisierung</h2>
+<div class="overlay" id="settingsOverlay" onclick="closeSettings(event)">
+    <div class="settings-modal" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <h2>Konfiguration</h2>
+            <button class="close-btn" onclick="toggleSettings()">✕</button>
+        </div>
         
-        <div class="settings-grid">
+        <div class="settings-content">
             <section>
-                <h3>Quick Pick hinzufügen</h3>
-                <input id="quickName" placeholder="Name (z.B. YouTube)">
-                <input id="quickURL" placeholder="URL (https://...)">
-                <input id="quickIcon" placeholder="Emoji (🔥, 🎮, 🌐)">
-                <input id="quickColor" type="color" value="#6366f1">
-                <button onclick="addQuickPick()" class="btn-primary">Hinzufügen</button>
+                <h3>⚡ Schnell-Hinzufügen (Presets)</h3>
+                <div id="presetContainer" class="preset-grid"></div>
+                
+                <h3 style="margin-top:20px">➕ Manuell</h3>
+                <div class="input-group">
+                    <input id="quickName" placeholder="Name">
+                    <input id="quickURL" placeholder="URL">
+                    <div class="row">
+                        <input id="quickIcon" placeholder="Emoji" style="flex:1">
+                        <input id="quickColor" type="color" value="#6366f1" style="width:50px">
+                    </div>
+                    <button onclick="addQuickPick()" class="btn-add">Hinzufügen</button>
+                </div>
             </section>
 
-            <section>
-                <h3>Design & Titel</h3>
-                <label>Dashboard Titel:</label>
-                <input id="customTitle" placeholder="Dein Titel">
-                <label>Akzentfarbe:</label>
-                <input type="color" id="accentColor" value="#6366f1">
-                <button onclick="applySettings()" class="btn-primary">Speichern</button>
+            <section class="divider-left">
+                <h3>🎨 Design Live</h3>
+                <label>Dashboard Titel</label>
+                <input id="customTitle" placeholder="Titel ändern..." oninput="liveUpdateSettings()">
+                
+                <label>Akzentfarbe</label>
+                <input type="color" id="accentColor" oninput="liveUpdateSettings()">
+                
+                <div class="stats-box">
+                    <p>Rechtsklick auf Icons zum Löschen.</p>
+                </div>
             </section>
         </div>
     </div>
 </div>
 
-<div class="main-container">
-    <header>
+<div class="container">
+    <header class="hero">
         <h1 id="title">MKWEB</h1>
-        <div class="clock-container">
-            <div id="time">00:00:00</div>
-            <div id="date">Montag, 1. Januar</div>
+        <div class="clock-box">
+            <div id="time">00:00</div>
+            <div id="date">Lädt...</div>
         </div>
     </header>
 
-    <div class="search-section">
-        <div class="search-box">
-            <input type="text" id="search" placeholder="Suchen mit Google..." autocomplete="off">
-            <button onclick="search()">🔍</button>
-        </div>
+    <div class="search-wrapper">
+        <input type="text" id="search" placeholder="Enter zum Suchen..." autocomplete="off">
+        <div class="search-hint">Google Suche</div>
     </div>
 
-    <nav id="quickList" class="quick-grid">
-        </nav>
+    <main id="quickList" class="bento-grid">
+        </main>
 
-    <div class="floating-controls">
-        <button id="themeToggle" title="Design wechseln">🌙</button>
-        <button id="settingsToggle" onclick="toggleSettings()" title="Einstellungen">⚙️</button>
+    <div class="action-bar">
+        <button onclick="toggleTheme()" id="themeBtn" class="glass-btn">🌙</button>
+        <button onclick="toggleSettings()" class="glass-btn">⚙️ Custom</button>
     </div>
 </div>
 
